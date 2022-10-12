@@ -48,11 +48,7 @@ if (!class_exists('\YooKassa\Client')) {
 function yookassatoken_MetaData()
 {
     return [
-        'DisplayName' => 'Yookassa',
-        'gatewayType' => 'Bank', // Must be set to 'Bank' to associate the type
-        'failedEmail' => 'Direct Debit Payment Failed',
-        'successEmail' => 'Direct Debit Payment Confirmation',
-        'pendingEmail' => 'Direct Debit Payment Pending',
+        'DisplayName' => 'Sample Tokenisation Gateway Module',
         'APIVersion' => '1.1', // Use API Version 1.1
     ];
 }
@@ -114,8 +110,183 @@ function yookassatoken_config()
  *
  * @return array
  */
-// function yookassatoken_nolocalcc()
+function yookassatoken_nolocalcc()
+{
+}
+// function yookassatoken_storeremote($params)
 // {
+
+// 	$params['systemurl'] = ($params['systemurl'][strlen($params['systemurl'])-1] != '/') ? $params['systemurl'] . '/' : $params['systemurl'];
+// 	$client = new \YooKassa\Client();
+// 	$client->setAuth($params['shopID'], $params['secretKey']);
+//     // Gateway Configuration Parameters
+//     $apiUsername = $params['apiUsername'];
+//     $apiPassword = $params['apiPassword'];
+//     $testMode = $params['testMode'];
+
+//     // Store Remote Parameters
+//     $action = $params['action']; // One of either 'create', 'update' or 'delete'
+//     $remoteGatewayToken = $params['gatewayid'];
+//     $cardType = $params['cardtype']; // Card Type
+//     $cardNumber = $params['cardnum']; // Credit Card Number
+//     $cardExpiry = $params['cardexp']; // Card Expiry Date (format: mmyy)
+//     $cardStart = $params['cardstart']; // Card Start Date (format: mmyy)
+//     $cardIssueNum = $params['cardissuenum']; // Card Issue Number
+//     $cardCvv = $params['cccvv']; // Card Verification Value
+
+//     // Client Parameters
+//     $firstname = $params['clientdetails']['firstname'];
+//     $lastname = $params['clientdetails']['lastname'];
+//     $email = $params['clientdetails']['email'];
+//     $address1 = $params['clientdetails']['address1'];
+//     $address2 = $params['clientdetails']['address2'];
+//     $city = $params['clientdetails']['city'];
+//     $state = $params['clientdetails']['state'];
+//     $postcode = $params['clientdetails']['postcode'];
+//     $country = $params['clientdetails']['country'];
+//     $phone = $params['clientdetails']['phonenumber'];
+
+//     switch ($action) {
+//         case 'create':
+//             // Invoked when a new card is added.
+            
+//             $postfields = [
+//                 'card_type' => $cardType,
+//                 'card_number' => $cardNumber,
+//                 'card_expiry_month' => substr($cardExpiry, 0, 2),
+//                 'card_expiry_year' => substr($cardExpiry, 2, 2),
+//                 'card_cvv' => $cardCvv,
+//                 'card_holder_name' => $firstname . ' ' . $lastname,
+//                 'card_holder_address1' => $address1,
+//                 'card_holder_address2' => $address2,
+//                 'card_holder_city' => $city,
+//                 'card_holder_state' => $state,
+//                 'card_holder_zip' => $postcode,
+//                 'card_holder_country' => $country,
+//             ];
+
+//             // Perform API call to store the provided card details and generate a token.
+//             // Sample response data:
+//             $response = [
+//                 'success' => true,
+//                 'token' => 'abc1111111111',
+//             ];
+//             $payment = $client->createPayment(
+//                 array(
+//                         'payment_token' => $description,
+//                     'amount' => array(
+//                         'value' => $params['amount'],
+//                         'currency' => $params['currency'],
+//                     ),
+//                     'confirmation' => array(
+//                         'type' => 'redirect',
+//                         // 'return_url' => $params['systemurl'] . '/modules/gateways/callback/whs_yookassa.php?id=' . $params['invoiceid'],
+//                         'return_url' => $params['systemurl'] . '/viewinvoice.php?id=' . $params['invoiceid'],
+//                     ),
+//                     'capture' => true,
+//                     'description' => 'Invoice #' . $params['invoiceid'],
+//                     'metadata' => array(
+//                         'invoiceid' => $params['invoiceid'],
+//                     ),
+//                     'save_payment_method' => true
+//                 ),
+//                 uniqid('', true)
+//             );
+//             $response = json_decode(json_encode($payment), true);
+
+//             if ($response['success']) {
+//                 return [
+//                     // 'success' if successful, otherwise 'error' for failure
+//                     'status' => 'success',
+//                     // Data to be recorded in the gateway log - can be a string or array
+//                     'rawdata' => $response,
+//                     // The token that should be stored in WHMCS for recurring payments
+//                     'gatewayid' => $response['token'],
+//                 ];
+//             }
+
+//             return [
+//                 // 'success' if successful, otherwise 'error' for failure
+//                 'status' => 'error',
+//                 // Data to be recorded in the gateway log - can be a string or array
+//                 'rawdata' => $response,
+//             ];
+
+//             break;
+//         case 'update':
+//             // Invoked when an existing card is updated.
+//             $postfields = [
+//                 'token' => $remoteGatewayToken,
+//                 'card_type' => $cardType,
+//                 'card_number' => $cardNumber,
+//                 'card_expiry_month' => substr($cardExpiry, 0, 2),
+//                 'card_expiry_year' => substr($cardExpiry, 2, 2),
+//                 'card_cvv' => $cardCvv,
+//                 'card_holder_name' => $firstname . ' ' . $lastname,
+//                 'card_holder_address1' => $address1,
+//                 'card_holder_address2' => $address2,
+//                 'card_holder_city' => $city,
+//                 'card_holder_state' => $state,
+//                 'card_holder_zip' => $postcode,
+//                 'card_holder_country' => $country,
+//             ];
+
+//             // Perform API call to update the requested token.
+//             // Sample response data:
+//             $response = [
+//                 'success' => true,
+//                 'token' => 'abc2222222222',
+//             ];
+
+//             if ($response['success']) {
+//                 return [
+//                     // 'success' if successful, otherwise 'error' for failure
+//                     'status' => 'success',
+//                     // Data to be recorded in the gateway log - can be a string or array
+//                     'rawdata' => $response,
+//                     // The token to be stored if it has changed
+//                     'gatewayid' => $response['token'],
+//                 ];
+//             }
+
+//             return [
+//                 // 'success' if successful, otherwise 'error' for failure
+//                 'status' => 'error',
+//                 // Data to be recorded in the gateway log - can be a string or array
+//                 'rawdata' => $response,
+//             ];
+
+//             break;
+//         case 'delete':
+//             // Invoked when an existing card is requested to be deleted.
+//             $postfields = [
+//                 'token' => $remoteGatewayToken,
+//             ];
+
+//             // Perform API call to delete the requested token.
+//             // Sample response data:
+//             $response = [
+//                 'success' => true,
+//             ];
+
+//             if ($response['success']) {
+//                 return [
+//                     // 'success' if successful, otherwise 'error' for failure
+//                     'status' => 'success',
+//                     // Data to be recorded in the gateway log - can be a string or array
+//                     'rawdata' => $response,
+//                 ];
+//             }
+
+//             return [
+//                 // 'success' if successful, otherwise 'declined', 'error' for failure
+//                 'status' => 'error',
+//                 // Data to be recorded in the gateway log - can be a string or array
+//                 'rawdata' => $response,
+//             ];
+
+//             break;
+//     }
 // }
 
 /**
@@ -157,15 +328,6 @@ function yookassatoken_capture($params)
     $cardIssueNum = $params['cardissuenum']; // Card Issue Number
     $cardCvv = $params['cccvv']; // Card Verification Value
 
-
-    // Capture Parameters
-    $remoteGatewayToken = $params['gatewayid'];// Store Remote Parameters
-    $bankType = $params['banktype']; // Bank Type, 'checking' or 'savings'
-    $bankName = $params['bankname']; // Bank Name
-    $bankCode = $params['bankcode']; // Bank Code/Routing Number
-    $bankAccount = $params['bankacct']; // Account Number
-
-
     // Invoice Parameters
     $invoiceId = $params['invoiceid'];
     $description = $params['description'];
@@ -194,6 +356,75 @@ function yookassatoken_capture($params)
     $moduleName = $params['paymentmethod'];
     $whmcsVersion = $params['whmcsVersion'];
 
+    // if (!$remoteGatewayToken) {
+    //     // If there is no token yet, it indicates this capture is being
+    //     // attempted using an existing locally stored card. Create a new
+    //     // token and then attempt capture.
+    //     $postfields = [
+    //         'card_type' => $cardType,
+    //         'card_number' => $cardNumber,
+    //         'card_expiry_month' => substr($cardExpiry, 0, 2),
+    //         'card_expiry_year' => substr($cardExpiry, 2, 2),
+    //         'card_cvv' => $cardCvv,
+    //         'card_holder_name' => $firstname . ' ' . $lastname,
+    //         'card_holder_address1' => $address1,
+    //         'card_holder_address2' => $address2,
+    //         'card_holder_city' => $city,
+    //         'card_holder_state' => $state,
+    //         'card_holder_zip' => $postcode,
+    //         'card_holder_country' => $country,
+    //     ];
+
+    //     // Perform API call to store the provided card details and generate a token.
+    //     // Sample response data:
+
+    //     $payment = $client->createPayment(
+    //                         array(
+    //                             'amount' => array(
+    //                                 'value' => $params['amount'],
+    //                                 'currency' => $params['currency'],
+    //                             ),
+    //                             'confirmation' => array(
+    //                                 'type' => 'embedded'
+    //                             ),
+    //                             'capture' => true,
+    //                             'description' => 'Invoice #' . $params['invoiceid'],
+    //                             'metadata' => array(
+    //                                 'invoiceid' => $params['invoiceid'],
+    //                             ),
+    //                             // 'save_payment_method' => true
+    //                         ),
+    //                         uniqid('', true)
+    //                     );
+    //     $response = json_decode(json_encode($payment), true);
+            
+    //     if ($response['status']) {
+    //         $remoteGatewayToken = $response['payment_method']['id'];
+    //         return [
+    //             'status' => 'success',
+    //             'rawdata' => $response,
+    //             'gatewayid' => $remoteGatewayToken,
+    //         ];
+    //     } else {
+    //         return [
+    //             // 'success' if successful, otherwise 'error' for failure
+    //             'status' => 'error',
+    //             // Data to be recorded in the gateway log - can be a string or array
+    //             'rawdata' => $response,
+    //         ];
+    //     }
+    // }
+
+    // $postfields = [
+    //     'token' => $remoteGatewayToken,
+    //     'cvv' => $cardCvv,
+    //     'invoice_number' => $invoiceId,
+    //     'amount' => $amount,
+    //     'currency' => $currencyCode,
+    // ];
+
+    // Perform API call to initiate capture.
+    // Sample response data:
     $payment = $client->createPayment(
         array(
             'payment_method_id' => $params['gatewayid'],
@@ -212,36 +443,36 @@ function yookassatoken_capture($params)
             ),
             // 'merchant_customer_id' => $clientId,
             'save_payment_method' => true,
-            // "receipt" => array(
-            //     "customer" => array(
-            //         "full_name" => "Иванов Иван Иванович",
-            //         "phone" => "79000000000",
-            //     ),
-            //     "items" => array(
-            //         array(
-            //             "description" => "Наименование товара 1",
-            //             "quantity" => "2.00",
-            //             "amount" => array(
-            //                 "value" => "250.00",
-            //                 "currency" => "RUB"
-            //             ),
-            //             "vat_code" => "2",
-            //             "payment_mode" => "full_prepayment",
-            //             "payment_subject" => "commodity"
-            //         ),
-            //         array(
-            //             "description" => "Наименование товара 2",
-            //             "quantity" => "1.00",
-            //             "amount" => array(
-            //                 "value" => "100.00",
-            //                 "currency" => "RUB"
-            //             ),
-            //             "vat_code" => "2",
-            //             "payment_mode" => "full_prepayment",
-            //             "payment_subject" => "commodity"
-            //         )
-            //     )
-            // )
+            "receipt" => array(
+                "customer" => array(
+                    "full_name" => "Иванов Иван Иванович",
+                    "phone" => "79000000000",
+                ),
+                "items" => array(
+                    array(
+                        "description" => "Наименование товара 1",
+                        "quantity" => "2.00",
+                        "amount" => array(
+                            "value" => "250.00",
+                            "currency" => "RUB"
+                        ),
+                        "vat_code" => "2",
+                        "payment_mode" => "full_prepayment",
+                        "payment_subject" => "commodity"
+                    ),
+                    array(
+                        "description" => "Наименование товара 2",
+                        "quantity" => "1.00",
+                        "amount" => array(
+                            "value" => "100.00",
+                            "currency" => "RUB"
+                        ),
+                        "vat_code" => "2",
+                        "payment_mode" => "full_prepayment",
+                        "payment_subject" => "commodity"
+                    )
+                )
+            )
         ),
         uniqid('', true)
     );
@@ -405,7 +636,7 @@ checkout.render('payment-form')
   .then(() => {
      //Код, который нужно выполнить после отображения платежной формы.
   });
-checkout.destroy();
+// checkout.destroy();
 
 // //Инициализация нового виджета. Все параметры обязательные.
 // const checkoutNew = new window.YooMoneyCheckoutWidget({
@@ -581,15 +812,6 @@ HTML;
 // // </script>
 // HTML;
 // }
-
-function yookassatoken_remoteupdate($params)
-{
-    return <<<HTML
-<div class="alert alert-info text-center">
-    Updating your card/bank is not possible. Please create a new Pay Method to make changes.
-</div>
-HTML;
-}
 
 /**
  * Admin Status Message.
